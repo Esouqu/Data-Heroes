@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { numberToArray, sliceArray } from '@/utils';
-import { computed } from 'vue';
+  import { numberToArray, sliceArray } from '@/utils';
+  import { computed } from 'vue';
+  import ButtonComponent from './ButtonComponent.vue';
 
   const emit = defineEmits(['currentPageUpdate']);
   const totalPages = defineModel<number>('totalPages', { type: Number, default: 1 });
@@ -11,7 +12,7 @@ import { computed } from 'vue';
     return sliceArray(pages, currentPage.value, 5);
   });
 
-  function onClick(page: number) {
+  function changePage(page: number) {
     currentPage.value = page;
 
     emit('currentPageUpdate', page);
@@ -20,42 +21,32 @@ import { computed } from 'vue';
  
 <template>
   <div class="pagination">
-    <button
+    <ButtonComponent
+      title="First"
+      :isDisabled="currentPage === 1"
+      @click="changePage(1)"
+    />
+    <ButtonComponent
       v-for="page in visibleButtons"
       :key="page"
-      :disabled="page === currentPage"
-      class="pagination__button"
-      @click="onClick(page)"
-    >
-      {{ page }}
-    </button>
+      :title="String(page)"
+      :isDisabled="page === currentPage"
+      @click="changePage(page)"
+    />
+    <ButtonComponent
+      title="Last"
+      :isDisabled="currentPage === totalPages"
+      @click="changePage(totalPages)"
+    />
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .pagination {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 1rem 0;
-
-    &__button {
-      width: 55px;
-      padding: 0.5rem 0;
-      margin: 0 0.5rem;
-      border: none;
-      border-radius: 4px;
-      font-size: 1.2rem;
-      color: white;
-      background-color: rgb(60, 62, 68);
-      transition: opacity .2s;
-      user-select: none;
-      cursor: pointer;
-
-      &:disabled {
-        opacity: 0.5;
-        pointer-events: none;
-      }
-    }
+    gap: 5px;
+    margin: 16px 0;
   }
 </style>

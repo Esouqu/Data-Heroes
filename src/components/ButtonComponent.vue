@@ -1,58 +1,59 @@
 <script lang="ts" setup>
-  const { title, isDisabled } = defineProps<{
+  const { title, isColored, isDisabled } = defineProps<{
     title: string;
+		isColored?: boolean;
     isDisabled?: boolean;
   }>();
 </script>
 
 <template>
-  <div class="button-wrapper" :class="{ disabled: isDisabled }">
-    <button class="button" click>
-			<span class="button__label">{{title}}</span>
-    </button>
-  </div>
+	<button
+		class="button"
+		:class="{ colored: isColored }"
+		:disabled="isDisabled"
+	>
+		{{ title }}
+	</button>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.button {
 		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		gap: 5px;
+		border-radius: 8px;
 		border: 0;
-		padding: 5px 10px;
-		height: 100%;
-		width: 100%;
-		color: black;
-		background-color: transparent;
+		padding: 10px 16px;
+		font-weight: 600;
+		text-transform: uppercase;
+		color: white;
+		background-color: #3c3e44;
 		transition: 0.2s;
 		user-select: none;
 		cursor: pointer;
 
-		&:hover {
-			background-color: rgb(0, 0, 0, 0.1);
-		}
-
-		&-wrapper {
-			display: flex;
-			border-radius: 100px;
+		&.colored {
+			color: black;
 			background-color: springgreen;
-			min-width: fit-content;
-			overflow: hidden;
 
-			&.disabled {
-				opacity: 0.5;
-				pointer-events: none;
-			}
-			&:active {
-				scale: 0.95;
+			&:hover {
+				opacity: .7;
 			}
 		}
 
-		&__label {
-			font-weight: 500;
-			z-index: 1;
+		&:hover {
+			opacity: .7;
+		}
+
+		&:active {
+			scale: 0.95;
+		}
+
+		&:disabled {
+			opacity: 0.5;
+			pointer-events: none;
 		}
 	}
 </style>

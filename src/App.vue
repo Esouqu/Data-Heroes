@@ -5,8 +5,9 @@
   import PaginationComponent from './components/PaginationComponent.vue';
   import SelectButton from './components/SelectButton.vue';
   import ButtonComponent from './components/ButtonComponent.vue';
+  import InputComponent from './components/InputComponent.vue';
 
-  const options = [
+  const statusOptions = [
     { title: 'All', value: '' },
     { title: 'Alive', value: 'Alive' },
     { title: 'Dead', value: 'Dead' },
@@ -60,18 +61,20 @@
 <template>
   <section class="characters-showcase">
     <div style="display: flex; align-items: center; gap: 30px;">
-      <div class="input-wrapper">
-        <label style="font-weight: 500;" for="search">Name</label>
-        <input id="search" class="input" v-model="name" />
-      </div>
+      <InputComponent id="search" label="Name" v-model:value="name" />
       <div style="display: flex; align-items: center; gap: 10px;">
         <div style="font-weight: 500; line-height: 1;">Status</div>
-        <SelectButton :options v-model:currentOption="status" />
+        <SelectButton :options="statusOptions" v-model:currentOption="status" />
       </div>
-      <ButtonComponent title="Apply" :isDisabled="isLoading || isFiltersApplied" @click="onAplly" />
+      <ButtonComponent
+        title="Apply"
+        :isColored="true"
+        :isDisabled="isLoading || isFiltersApplied"
+        @click="onAplly"
+      />
     </div>
-    <div v-if="isLoading">Fetching users...</div>
-    <p v-else-if="error">An error ocurred while fetching users</p>
+    <p v-if="isLoading">Fetching characters...</p>
+    <p v-else-if="error">An error ocurred while fetching characters</p>
     <div v-else-if="characters" class="characters-grid">
       <CharacterCard
         v-for="char in characters"
@@ -84,7 +87,11 @@
         :status="char.status"
       />
     </div>
-    <PaginationComponent v-model:totalPages="pages" v-model:currentPage="page" @currentPageUpdate="onCurrentPageUpdate"/>
+    <PaginationComponent
+      v-model:totalPages="pages"
+      v-model:currentPage="page"
+      @currentPageUpdate="onCurrentPageUpdate"
+    />
   </section>
 </template>
 
@@ -102,53 +109,12 @@
 
     &-showcase {
       display: flex;
-      flex: 1;
       flex-direction: column;
       -webkit-box-pack: center;
       justify-content: center;
       -webkit-box-align: center;
       align-items: center;
-      padding: 4.5rem 0px;
+      padding: 16px 0px;
     }
   }
-
-  .input {
-		position: relative;
-		padding: 10.5px;
-		border: 0;
-		border-radius: 5px;
-		outline: 1px solid gray;
-		width: 100%;
-		line-height: 1;
-		text-decoration: none;
-		text-overflow: ellipsis;
-		letter-spacing: 0.25px;
-		color: white;
-		background-color: transparent;
-		transition: outline-color 0.3s;
-		overflow: hidden;
-
-		&-wrapper {
-			position: relative;
-			display: flex;
-      align-items: center;
-			gap: 10px;
-			margin: 1rem 0;
-      width: var(--input-w-w, auto);
-
-			&.disabled {
-				opacity: 0.5;
-			}
-		}
-
-		&:focus {
-			z-index: 999;
-			outline: 3px solid springgreen;
-			border-color: transparent;
-		}
-
-		&:hover:not(:focus):not(:disabled) {
-			outline-color: white;
-		}
-	}
 </style>
